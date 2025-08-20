@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title> Reader</title>
+  <title>Manga Reader</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       margin: 0;
@@ -12,20 +13,18 @@
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
       flex-direction: column;
-      align-items: center;
       height: 100vh;
-      overflow: hidden;
     }
 
     header {
       padding: 12px;
-      font-size: 22px;
+      font-size: 20px;
       font-weight: bold;
       text-align: center;
       border-bottom: 1px solid #222;
-      width: 100%;
       background: #111;
       box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      flex-shrink: 0;
     }
 
     .viewer {
@@ -36,13 +35,14 @@
       width: 100%;
       overflow: hidden;
       position: relative;
+      background: #000;
     }
 
     img {
       max-width: 100%;
-      max-height: 95%;
+      max-height: 100%;
       object-fit: contain;
-      border-radius: 10px;
+      border-radius: 6px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.7);
       opacity: 0;
       transition: opacity 0.4s ease-in-out;
@@ -56,19 +56,19 @@
       padding: 12px;
       background: #111;
       border-top: 1px solid #222;
-      width: 100%;
       text-align: center;
+      flex-shrink: 0;
     }
 
     button {
       background: #222;
       border: none;
-      padding: 10px 18px;
-      margin: 0 12px;
-      border-radius: 8px;
+      padding: 10px 16px;
+      margin: 0 8px;
+      border-radius: 6px;
       color: white;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 15px;
       transition: background 0.3s;
     }
 
@@ -77,37 +77,58 @@
     }
 
     .page-number {
-      margin-top: 8px;
-      font-size: 15px;
+      margin-top: 6px;
+      font-size: 14px;
       color: #aaa;
+    }
+
+    /* Make buttons bigger on small screens */
+    @media (max-width: 600px) {
+      button {
+        font-size: 14px;
+        padding: 8px 14px;
+        margin: 0 6px;
+      }
+      header {
+        font-size: 18px;
+      }
     }
   </style>
 </head>
 <body>
-  <header>Reader</header>
+  <header>Manga Reader</header>
 
   <div class="viewer">
-    <img id="mangaPage" src="cover.png" alt="Manga Page" class="show">
+    <img id="mangaPage" src="" alt="Manga Page" class="show">
   </div>
 
   <div class="controls">
     <button onclick="prevPage()">⬅ Prev</button>
     <button onclick="nextPage()">Next ➡</button>
-    <div class="page-number" id="pageNumber">Cover</div>
+    <div class="page-number" id="pageNumber">Loading...</div>
   </div>
 
   <script>
-    // Image list (cover + 10 pages)
+    // Cloudinary image list
     const pages = [
-      "cover.png",
-      "page1.png", "page2.png", "page3.png", "page4.png", "page5.png",
-      "page6.png", "page7.png", "page8.png", "page9.png", "page10.png"
+      "https://res.cloudinary.com/dfmhr0tu8/image/upload/v1755697555/cover_rxd1l1.png",
+      "https://res.cloudinary.com/dfmhr0tu8/image/upload/v1755697654/page1_dgnhlf.png",
+      "https://res.cloudinary.com/dfmhr0tu8/image/upload/v1755697656/page2_vjegsv.png",
+      "https://res.cloudinary.com/dfmhr0tu8/image/upload/v1755697652/page3_w9orsf.png",
+      "https://res.cloudinary.com/dfmhr0tu8/image/upload/v1755697679/page4_fero4m.png",
+      "https://res.cloudinary.com/dfmhr0tu8/image/upload/v1755697654/page5_nbba5b.png",
+      "https://res.cloudinary.com/dfmhr0tu8/image/upload/v1755697653/page6_anwbwn.png",
+      "https://res.cloudinary.com/dfmhr0tu8/image/upload/v1755697654/page7_d7seru.png",
+      "https://res.cloudinary.com/dfmhr0tu8/image/upload/v1755697657/page8_tuigja.png",
+      "https://res.cloudinary.com/dfmhr0tu8/image/upload/v1755697658/page9_zairdb.png",
+      "https://res.cloudinary.com/dfmhr0tu8/image/upload/v1755697656/page10_nqf1ja.png"
     ];
 
     let currentPage = 0;
     const imgElement = document.getElementById("mangaPage");
     const pageNumber = document.getElementById("pageNumber");
 
+    // Initialize
     function updatePage() {
       imgElement.classList.remove("show");
       setTimeout(() => {
@@ -139,7 +160,7 @@
       if (e.key === "ArrowLeft") prevPage();
     });
 
-    // Swipe navigation for touch devices
+    // Swipe navigation
     let touchStartX = 0;
     document.addEventListener("touchstart", (e) => {
       touchStartX = e.changedTouches[0].screenX;
@@ -149,6 +170,9 @@
       if (touchEndX < touchStartX - 50) nextPage();
       if (touchEndX > touchStartX + 50) prevPage();
     });
+
+    // Load first page
+    updatePage();
   </script>
 </body>
 </html>
